@@ -29,11 +29,15 @@ public class MovieService {
     }
 
     public List<MovieResponse> findMoviesByGenre(String genre) {
-        if (Arrays.stream(Genre.values()).noneMatch(g -> g.toString().equals(genre)))
+        //genre=genre.toUpperCase();
+        if (Arrays.stream(Genre.values()).noneMatch(g -> g.toString().equals(genre.toUpperCase())))
             return new ArrayList<>();
-        List<Movie> movieList = movieRepository.findByGenre(Genre.valueOf(genre));
+        List<Movie> movieList = movieRepository.findByGenre(Genre.valueOf(genre.toUpperCase()));
         if (!CollectionUtils.isEmpty(movieList)) {
-            List<MovieResponse> movieResponseList = movieList.stream().sorted(Comparator.comparing(Movie::getRating, Comparator.reverseOrder())).map(m -> m.toMovieResponse()).collect(Collectors.toList());
+            List<MovieResponse> movieResponseList = movieList.stream()
+                    .sorted(Comparator.comparing(Movie::getRating, Comparator.reverseOrder()))
+                    .map(m -> m.toMovieResponse())
+                    .collect(Collectors.toList());
             if (movieResponseList.size() > 5)
                 return movieResponseList.subList(0, 4);
             return movieResponseList;

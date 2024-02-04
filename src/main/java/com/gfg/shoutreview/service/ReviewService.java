@@ -2,6 +2,7 @@ package com.gfg.shoutreview.service;
 
 import com.gfg.shoutreview.domain.Movie;
 import com.gfg.shoutreview.domain.Review;
+import com.gfg.shoutreview.exceptions.ResourceNotFoundException;
 import com.gfg.shoutreview.repository.MovieRepository;
 import com.gfg.shoutreview.repository.ReviewRepository;
 import com.gfg.shoutreview.service.response.ReviewResponse;
@@ -20,7 +21,7 @@ public class ReviewService {
     private MovieRepository movieRepository;
 
     public void addReview(Review review) {
-        Movie movie=movieRepository.findById(review.getMovie().getId()).orElse(null);
+        Movie movie=movieRepository.findById(review.getMovie().getId()).orElseThrow(()->new ResourceNotFoundException("Movie Not found"));
         reviewRepository.save(review);
         //need to optimized
         //exception handling.
@@ -28,7 +29,8 @@ public class ReviewService {
             Double average = reviewRepository.getReviewAverage(movie.getId());
             movie.setRating(average);
             movieRepository.save(movie);
-        }
+        }else
+            throw new ResourceNotFoundException("No Such Movie");
 
     }
 

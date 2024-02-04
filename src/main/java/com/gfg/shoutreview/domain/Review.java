@@ -32,7 +32,7 @@ public class Review {
 
     private String movieReview;
 
-    private double rating;  // rating dedicated to each review.
+    private Double rating;  // rating dedicated to each review.
 
     @ManyToOne
     @JoinColumn(name="movie_id", nullable=false)
